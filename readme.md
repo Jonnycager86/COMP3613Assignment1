@@ -1,3 +1,56 @@
+1. flask staff view
+
+Displays a list of all staff members.
+
+
+2. flask staff view-shifts
+
+Displays all shifts assigned to staff members.
+
+
+3. flask staff add-staff
+
+Prompts for a username and password, then adds a new staff member to the database.
+
+
+4. flask staff time-in
+
+Prompts for: Staff username, Shift ID, Date and time
+Logs the staff member's time in for the selected shift.
+
+
+
+5. flask staff time-out
+
+Prompts for Staff username, Shift ID, Date and time
+Logs the staff member's time out for the selected shift.
+
+
+6. flask admin add-admin
+
+Prompts for username and password, then creates a new admin user.
+
+
+7. flask admin schedule-shift
+
+Prompts for Admin username, Staff username, Shift date, Start and end time
+Schedules a shift for the staff member.
+
+8. flask admin shiftreport
+
+Prompts for a start date and displays a weekly shift report showing: Staff name, Shift date
+Start/end times, Time in/out logs, Total hours worked, Status (Complete / In Only / No Log)
+
+
+
+
+
+
+
+
+
+
+
 ![Tests](https://github.com/uwidcit/flaskmvc/actions/workflows/dev.yml/badge.svg)
 
 # Flask MVC Template
