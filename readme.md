@@ -1,4 +1,4 @@
-
+Documentation for commands in wsgi.py file
 1. flask staff view
 
 Displays a list of all staff members.
