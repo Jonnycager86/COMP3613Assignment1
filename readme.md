@@ -1,3 +1,4 @@
+
 1. flask staff view
 
 Displays a list of all staff members.
@@ -40,13 +41,6 @@ Schedules a shift for the staff member.
 
 Prompts for a start date and displays a weekly shift report showing: Staff name, Shift date
 Start/end times, Time in/out logs, Total hours worked, Status (Complete / In Only / No Log)
-
-
-
-
-
-
-
 
 
 
