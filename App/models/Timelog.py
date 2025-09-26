@@ -12,14 +12,15 @@ class Timelog(db.Model):
     time_out = db.Column(db.DateTime)
    
 
-   # def __init__(self):
+    def __init__(self, staff_id, shift_id, time_in=None, time_out=None):
+        self.staff_id = staff_id
+        self.shift_id = shift_id
+        self.time_in = time_in
+        self.time_out = time_out
+        
         
 
-    def get_json(self):
-        return{
-            'id': self.id,
-            'username': self.username
-        }
+   
 
    
 

@@ -51,17 +51,14 @@ def list_user_command(format):
 
 app.cli.add_command(user_cli) # add the group to the cli
 
+
+#NOTE: All sample data for admin users, staff users,
+# shifts etc are in initialize.py
+
 '''
 Staff Commands
 '''
 staff_cli = AppGroup('staff', help="Staff member object commands")
-
-# @user_cli.command("create", help="Creates a staff user")
-# @click.argument("username", default="rob")
-# @click.argument("password", default="robpass")
-# def create_(username, password):
-    
-#     print(f'{username} created!')
 
 # Command to view all staff
 @staff_cli.command("view", help="Displays roster of all staff")
@@ -70,13 +67,35 @@ def list_roster(format):
     staff_list = Staff.query.all()
     for staff in staff_list:
         print(staff)
-        
+    
+
+# Command to view all shifts    
 @staff_cli.command("view-shifts", help="view all shifts")
 @click.argument("format", default="string")
 def list_shifts(format):
     shift_list = Shift.query.all()
     for shift in shift_list:
         print(shift)
+   
+   
+# Command to add new staff user
+@staff_cli.command("add-staff", help="Add a new staff user")   
+def add_staff():
+
+        name = click.prompt("Enter new staff username")
+        if not 3 <= len(name) <= 20:
+            print("Username needs to be in between 3 and 30 characters")
+            
+        password = click.prompt("Enter password" , hide_input = True)
+        if len(password)<6:
+            print("Password must be longer than 6 characters")
+            return
+        
+        new_staff = Staff(name, password) 
+        print(f"New staff {name} added")
+        db.session.add(new_staff)
+        db.session.commit()
+        
 
 
 # Command to log time in
@@ -96,22 +115,25 @@ def log_time_in():
     for shift in staff.shifts:
         print(f" Shift ID :{shift.id} {shift.start_time} - {shift.end_time}")
     
-    shift_id = click.prompt("Enter your shift ID", type=int)
+    shift_id = click.prompt("Enter your shift ID based on the assigned shifts above", type=int)
     shift = Shift.query.filter_by(id=shift_id, staff_id=staff.id).first()
     if not shift:
         print("invalid shift ID entered")
         return
     
 
+    today = datetime.now()
     date_str = click.prompt("Enter date in format (dd/mm/yyyy)")
-    time_in_str = click.prompt("Enter time in format (hh:mm)")
-    print(date_str)
+    time_in_str = click.prompt("Enter time in format (24 hour time) (hh:mm)")
     print(time_in_str)
     
     date_time_str = f"{date_str} {time_in_str}"
     
     try:
         dateTimeObj = datetime.strptime(date_time_str, "%d/%m/%Y %H:%M" )
+        if dateTimeObj > today:
+            print("Date entered is after today's date")
+            return
     
     except ValueError:
         print("date/time format invalid")
@@ -138,7 +160,7 @@ def log_time_out():
     
 
     date_str = click.prompt("Enter date in format (dd/mm/yyyy)")
-    time_in_str = click.prompt("Enter time in format (hh:mm)")
+    time_in_str = click.prompt("Enter time in format (24 hour time) (hh:mm)")
     print(date_str)
     print(time_in_str)
     
@@ -170,8 +192,29 @@ Admin Commands
 '''
 
 
-admin_cli = AppGroup('admin', help="admin object commands")
+admin_cli = AppGroup('admin', help="admin commands")
 
+# Command to add new admin user
+@admin_cli.command("add-admin", help="Add a new admin user")   
+def add_staff():
+
+        name = click.prompt("Enter new admin username")
+        if not 3 <= len(name) <= 20:
+            print("Username needs to be in between 3 and 20 characters")
+            return
+        
+        password = click.prompt("Enter password")
+        if len(password)<6:
+            print("Password must be longer than 6 characters")
+            return
+        
+        new_admin = Admin(name, password) 
+        print(f"New staff {name} added")
+        db.session.add(new_admin)
+        db.session.commit()
+    
+    
+# Command to schedule a shift
 @admin_cli.command("schedule-shift", help="Schedule a staff member's shift")
 def schedule_shift():
     admin_username = click.prompt("Enter admin username")
@@ -195,7 +238,19 @@ def schedule_shift():
         end_datetime = datetime.strptime(f"{date_str} {end_time_str}", "%d/%m/%Y %H:%M")
         
         if end_datetime <= start_datetime:
-            print("End time must be after start time")
+            print("Shift end time must be after start time")
+            return
+        
+        time1 = start_datetime.time()
+        time2 = end_datetime.time()
+        time1_hours = time1.hour + time1.minute /60
+        time2_hours = time2.hour + time2.minute /60
+        
+        
+        time_diff = abs(time1_hours - time2_hours)
+        
+        if time_diff > 9: # arbitrary maximum shift length
+            print("Shift entered exceeds staff limit")
             return
         
         new_shift = Shift(
@@ -251,8 +306,9 @@ def get_weekly_shift_report(start_date):
 
 
 @admin_cli.command("shiftreport", help="View weekly shift report")
-@click.argument("start_date")
-def shift_report_command(start_date):
+def shift_report_command():
+    
+    start_date = click.prompt("Enter a start date")
     try:
         start_dt = datetime.strptime(start_date, "%d/%m/%Y")
     except ValueError:
