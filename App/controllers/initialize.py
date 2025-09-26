@@ -9,15 +9,15 @@ def initialize():
     db.create_all()
     #create_user('bob', 'bobpass')
     
-    #test for commands (change later)
+    #sample test data for commands 
     
-    # Create Admins
+    # Admins
     admin1 = Admin(username="alice_admin", password="adminpass1")
     admin2 = Admin(username="brian_admin", password="adminpass2")
     admin3 = Admin(username="carol_admin", password="adminpass3")
     db.session.add_all([admin1, admin2, admin3])
 
-    # Create Staff Members
+    # Staff Members
     staff1 = Staff(username="jon_staff", password="devpass")
     staff2 = Staff(username="maya_staff", password="designpass")
     staff3 = Staff(username="leo_staff", password="supportpass")
@@ -28,9 +28,9 @@ def initialize():
     staff8 = Staff(username="lisa_staff", password="operationspass")
     
     db.session.add_all([staff1, staff2, staff3, staff4, staff5, staff6, staff7, staff8])
-    db.session.flush()  # ensures staff IDs are available for FK use
+    db.session.flush()  
 
-    # Create Shifts - ensuring at least 2 shifts per staff member
+    # Shifts
     shifts = [
         # Jon's shifts (staff1)
         Shift(staff_id=staff1.id,
@@ -79,7 +79,7 @@ def initialize():
               start_time=datetime(2025, 9, 28, 8, 0),
               end_time=datetime(2025, 9, 28, 16, 0)),
         
-        # Mike's shifts (staff5) - includes some weekend shifts
+        # Mike's shifts (staff5)
         Shift(staff_id=staff5.id,
               start_time=datetime(2025, 9, 21, 12, 0),
               end_time=datetime(2025, 9, 21, 20, 0)),
@@ -104,7 +104,7 @@ def initialize():
               start_time=datetime(2025, 9, 27, 8, 0),
               end_time=datetime(2025, 9, 27, 16, 0)),
         
-        # David's shifts (staff7) - part-time schedule
+        # David's shifts (staff7) 
         Shift(staff_id=staff7.id,
               start_time=datetime(2025, 9, 23, 13, 0),
               end_time=datetime(2025, 9, 23, 17, 0)),
@@ -118,7 +118,7 @@ def initialize():
               start_time=datetime(2025, 9, 30, 13, 0),
               end_time=datetime(2025, 9, 30, 17, 0)),
         
-        # Lisa's shifts (staff8) - early morning shifts
+        # Lisa's shifts (staff8)
         Shift(staff_id=staff8.id,
               start_time=datetime(2025, 9, 22, 6, 0),
               end_time=datetime(2025, 9, 22, 14, 0)),
@@ -136,7 +136,7 @@ def initialize():
     db.session.add_all(shifts)
     db.session.flush()
 
-    # Create some sample Timelogs (if you want to test with actual clock-in/out data)
+    
     timelogs = [
         # Jon's timelogs for his first shift
         Timelog(staff_id=staff1.id, shift_id=shifts[0].id,
