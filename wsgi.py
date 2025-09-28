@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from flask.cli import with_appcontext, AppGroup
 from datetime import datetime
 from App.database import db, get_migrate
-from App.models import User, Admin, Shift, Staff, Timelog
+from App.models import User, Admin, Shift, Staff, Timelog, Staff_shift
 from App.main import create_app
 from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize )
 
@@ -71,8 +71,7 @@ def list_roster(format):
 
 # Command to view all shifts    
 @staff_cli.command("view-shifts", help="view all shifts")
-@click.argument("format", default="string")
-def list_shifts(format):
+def list_shifts():
     shift_list = Shift.query.all()
     for shift in shift_list:
         print(shift)
@@ -116,7 +115,7 @@ def log_time_in():
         print(f" Shift ID :{shift.id} {shift.start_time} - {shift.end_time}")
     
     shift_id = click.prompt("Enter your shift ID based on the assigned shifts above", type=int)
-    shift = Shift.query.filter_by(id=shift_id, staff_id=staff.id).first()
+    shift = Shift.query.filter_by(id=shift_id).first()
     if not shift:
         print("invalid shift ID entered")
         return
@@ -143,6 +142,8 @@ def log_time_in():
     db.session.commit()
     print(f"time-in recorded for {staff.username} on shift {shift.id} at {dateTimeObj}.")
         
+        
+        
 #Command to log time out
 @staff_cli.command("time-out", help="Logs the time in for the staff user for a shift")
 def log_time_out():
@@ -153,7 +154,7 @@ def log_time_out():
         return
     
     shift_id = click.prompt("Enter your shift ID", type=int)
-    shift = Shift.query.filter_by(id=shift_id, staff_id=staff.id).first()
+    shift = Shift.query.filter_by(id=shift_id).first()
     if not shift:
         print("invalid shift ID entered")
         return
@@ -214,13 +215,14 @@ def add_staff():
         db.session.commit()
     
     
-# Command to schedule a shift
+# Command to schedule a shift // fixed amount of shifts for the week
 @admin_cli.command("schedule-shift", help="Schedule a staff member's shift")
 def schedule_shift():
+    
     admin_username = click.prompt("Enter admin username")
     admin = Admin.query.filter_by(username=admin_username).first()
     if not admin:
-        print("Admin not found")
+        print("Admin not found or not Admin user")
         return
     
     staff_username = click.prompt("Enter staff username to schedule")
@@ -229,43 +231,21 @@ def schedule_shift():
         print("Staff member not found")
         return
     
-    date_str = click.prompt("Enter shift date (dd/mm/yyyy)")
-    start_time_str = click.prompt("Enter shift start time (hh:mm)")
-    end_time_str = click.prompt("Enter shift end time (hh:mm)")
+    shift_list = Shift.query.all()
+    for shift in shift_list:
+        print(f"{shift} {shift.start_time} {shift.end_time}")
+        
+    shift_selection = click.prompt("Select a shift ID for selection", type = int)
+    shift = Shift.query.filter_by(id=shift_selection).first()
     
-    try:
-        start_datetime = datetime.strptime(f"{date_str} {start_time_str}", "%d/%m/%Y %H:%M")
-        end_datetime = datetime.strptime(f"{date_str} {end_time_str}", "%d/%m/%Y %H:%M")
-        
-        if end_datetime <= start_datetime:
-            print("Shift end time must be after start time")
-            return
-        
-        time1 = start_datetime.time()
-        time2 = end_datetime.time()
-        time1_hours = time1.hour + time1.minute /60
-        time2_hours = time2.hour + time2.minute /60
-        
-        
-        time_diff = abs(time1_hours - time2_hours)
-        
-        if time_diff > 9: # arbitrary maximum shift length
-            print("Shift entered exceeds staff limit")
-            return
-        
-        new_shift = Shift(
-            staff_id=staff.id,
-            start_time=start_datetime,
-            end_time=end_datetime
-        )
-        
-        db.session.add(new_shift)
-        db.session.commit()
-        print(f"Shift scheduled for {staff_username} on {date_str} from {start_time_str} to {end_time_str}")
-        
-    except ValueError:
-        print("Invalid date/time format")
+    if staff in shift.staff_members:
+        print(f"{staff} is already assigned to this shift")
         return
+    
+    shift.staff_members.append(staff)
+    db.session.commit()
+    print(f" {staff.username} has been assigned to shift {shift.id}")
+    
     
 
 def get_weekly_shift_report(start_date):

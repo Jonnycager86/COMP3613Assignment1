@@ -11,6 +11,8 @@ def initialize():
     
     #sample test data for commands 
     
+    #for test purposes,e.g  2 shifts in a day both 7 hours (8am-3pm and 3pm-10pm)
+    
     # Admins
     admin1 = Admin(username="alice_admin", password="adminpass1")
     admin2 = Admin(username="brian_admin", password="adminpass2")
@@ -30,153 +32,66 @@ def initialize():
     db.session.add_all([staff1, staff2, staff3, staff4, staff5, staff6, staff7, staff8])
     db.session.flush()  
 
-    # Shifts
+    # if following this format should have 14 shifts in a 7 day week
     shifts = [
-        # Jon's shifts (staff1)
-        Shift(staff_id=staff1.id,
-              start_time=datetime(2025, 9, 22, 9, 0),
-              end_time=datetime(2025, 9, 22, 17, 0)),
-        Shift(staff_id=staff1.id,
-              start_time=datetime(2025, 9, 25, 9, 0),
-              end_time=datetime(2025, 9, 25, 17, 0)),
-        Shift(staff_id=staff1.id,
-              start_time=datetime(2025, 9, 29, 8, 30),
-              end_time=datetime(2025, 9, 29, 16, 30)),
-        
-        # Maya's shifts (staff2)
-        Shift(staff_id=staff2.id,
-              start_time=datetime(2025, 9, 23, 10, 0),
-              end_time=datetime(2025, 9, 23, 18, 0)),
-        Shift(staff_id=staff2.id,
-              start_time=datetime(2025, 9, 26, 10, 0),
-              end_time=datetime(2025, 9, 26, 18, 0)),
-        Shift(staff_id=staff2.id,
-              start_time=datetime(2025, 9, 30, 9, 30),
-              end_time=datetime(2025, 9, 30, 17, 30)),
-        
-        # Leo's shifts (staff3)
-        Shift(staff_id=staff3.id,
-              start_time=datetime(2025, 9, 24, 8, 30),
-              end_time=datetime(2025, 9, 24, 16, 30)),
-        Shift(staff_id=staff3.id,
-              start_time=datetime(2025, 9, 27, 8, 30),
-              end_time=datetime(2025, 9, 27, 16, 30)),
-        Shift(staff_id=staff3.id,
-              start_time=datetime(2025, 10, 1, 9, 0),
-              end_time=datetime(2025, 10, 1, 17, 0)),
-        
-        # Sarah's shifts (staff4)
-        Shift(staff_id=staff4.id,
-              start_time=datetime(2025, 9, 22, 8, 0),
-              end_time=datetime(2025, 9, 22, 16, 0)),
-        Shift(staff_id=staff4.id,
-              start_time=datetime(2025, 9, 24, 8, 0),
-              end_time=datetime(2025, 9, 24, 16, 0)),
-        Shift(staff_id=staff4.id,
-              start_time=datetime(2025, 9, 26, 8, 0),
-              end_time=datetime(2025, 9, 26, 16, 0)),
-        Shift(staff_id=staff4.id,
-              start_time=datetime(2025, 9, 28, 8, 0),
-              end_time=datetime(2025, 9, 28, 16, 0)),
-        
-        # Mike's shifts (staff5)
-        Shift(staff_id=staff5.id,
-              start_time=datetime(2025, 9, 21, 12, 0),
-              end_time=datetime(2025, 9, 21, 20, 0)),
-        Shift(staff_id=staff5.id,
-              start_time=datetime(2025, 9, 22, 12, 0),
-              end_time=datetime(2025, 9, 22, 20, 0)),
-        Shift(staff_id=staff5.id,
-              start_time=datetime(2025, 9, 28, 12, 0),
-              end_time=datetime(2025, 9, 28, 20, 0)),
-        Shift(staff_id=staff5.id,
-              start_time=datetime(2025, 9, 29, 12, 0),
-              end_time=datetime(2025, 9, 29, 20, 0)),
-        
-        # Anna's shifts (staff6)
-        Shift(staff_id=staff6.id,
-              start_time=datetime(2025, 9, 23, 9, 0),
-              end_time=datetime(2025, 9, 23, 17, 0)),
-        Shift(staff_id=staff6.id,
-              start_time=datetime(2025, 9, 25, 9, 0),
-              end_time=datetime(2025, 9, 25, 17, 0)),
-        Shift(staff_id=staff6.id,
-              start_time=datetime(2025, 9, 27, 8, 0),
-              end_time=datetime(2025, 9, 27, 16, 0)),
-        
-        # David's shifts (staff7) 
-        Shift(staff_id=staff7.id,
-              start_time=datetime(2025, 9, 23, 13, 0),
-              end_time=datetime(2025, 9, 23, 17, 0)),
-        Shift(staff_id=staff7.id,
-              start_time=datetime(2025, 9, 25, 13, 0),
-              end_time=datetime(2025, 9, 25, 17, 0)),
-        Shift(staff_id=staff7.id,
-              start_time=datetime(2025, 9, 27, 13, 0),
-              end_time=datetime(2025, 9, 27, 17, 0)),
-        Shift(staff_id=staff7.id,
-              start_time=datetime(2025, 9, 30, 13, 0),
-              end_time=datetime(2025, 9, 30, 17, 0)),
-        
-        # Lisa's shifts (staff8)
-        Shift(staff_id=staff8.id,
-              start_time=datetime(2025, 9, 22, 6, 0),
-              end_time=datetime(2025, 9, 22, 14, 0)),
-        Shift(staff_id=staff8.id,
-              start_time=datetime(2025, 9, 24, 6, 0),
-              end_time=datetime(2025, 9, 24, 14, 0)),
-        Shift(staff_id=staff8.id,
-              start_time=datetime(2025, 9, 26, 6, 0),
-              end_time=datetime(2025, 9, 26, 14, 0)),
-        Shift(staff_id=staff8.id,
-              start_time=datetime(2025, 9, 29, 6, 0),
-              end_time=datetime(2025, 9, 29, 14, 0)),
+        Shift(start_time=datetime(2025, 9, 22, 8, 0), end_time=datetime(2025, 9, 22, 15, 0)),  # morning
+        Shift(start_time=datetime(2025, 9, 22, 15, 0), end_time=datetime(2025, 9, 22, 22, 0)), # evening
+        Shift(start_time=datetime(2025, 9, 23, 8, 0), end_time=datetime(2025, 9, 23, 15, 0)),  # morning
+        Shift(start_time=datetime(2025, 9, 23, 15, 0), end_time=datetime(2025, 9, 23, 22, 0)), # evening
+        Shift(start_time=datetime(2025, 9, 24, 8, 0), end_time=datetime(2025, 9, 24, 15, 0)),  # morning
+        Shift(start_time=datetime(2025, 9, 24, 15, 0), end_time=datetime(2025, 9, 24, 22, 0)), # evening
+        Shift(start_time=datetime(2025, 9, 25, 8, 0), end_time=datetime(2025, 9, 25, 15, 0)),  # morning
+        Shift(start_time=datetime(2025, 9, 25, 15, 0), end_time=datetime(2025, 9, 25, 22, 0)), # evening
     ]
-    
-    db.session.add_all(shifts)
-    db.session.flush()
 
+    db.session.add_all(shifts)
+    db.session.commit()
     
+    # Assign staff to shifts
+    shifts[0].staff_members.extend([staff1, staff2])
+    shifts[1].staff_members.extend([staff3, staff4])
+    shifts[2].staff_members.extend([staff5, staff6])
+    shifts[3].staff_members.extend([staff7, staff8])
+    shifts[4].staff_members.extend([staff1, staff3])
+    shifts[5].staff_members.extend([staff2, staff4])
+    shifts[6].staff_members.extend([staff5, staff7])
+    shifts[7].staff_members.extend([staff6, staff8])
+
+    db.session.commit()
+    
+    # Timelogs - using valid shift indices (0-7)
     timelogs = [
-        # Jon's timelogs for his first shift
-        Timelog(staff_id=staff1.id, shift_id=shifts[0].id,
-               time_in=datetime(2025, 9, 22, 8, 58),
-               time_out=datetime(2025, 9, 22, 17, 5)),
+        # 9/22 Morning e.g jon
+    Timelog(staff_id=staff1.id, shift_id=shifts[0].id, time_in=datetime(2025, 9, 22, 7, 57), time_out=datetime(2025, 9, 22, 15, 3)),
+    Timelog(staff_id=staff2.id, shift_id=shifts[0].id, time_in=datetime(2025, 9, 22, 8, 2), time_out=datetime(2025, 9, 22, 15, 0)),
         
-        # Maya's timelogs for her first shift
-        Timelog(staff_id=staff2.id, shift_id=shifts[3].id,
-               time_in=datetime(2025, 9, 23, 9, 55),
-               time_out=datetime(2025, 9, 23, 18, 10)),
+      # 9/22 Evening
+    Timelog(staff_id=staff3.id, shift_id=shifts[1].id, time_in=datetime(2025, 9, 22, 15, 0), time_out=datetime(2025, 9, 22, 22, 0)),
+    Timelog(staff_id=staff4.id, shift_id=shifts[1].id, time_in=datetime(2025, 9, 22, 15, 5), time_out=datetime(2025, 9, 22, 21, 58)),
         
-        # Leo's timelogs for his first shift
-        Timelog(staff_id=staff3.id, shift_id=shifts[6].id,
-               time_in=datetime(2025, 9, 24, 8, 30),
-               time_out=datetime(2025, 9, 24, 16, 35)),
+         # 9/23 Morning
+    Timelog(staff_id=staff5.id, shift_id=shifts[2].id, time_in=datetime(2025, 9, 23, 7, 58), time_out=datetime(2025, 9, 23, 15, 0)),
+    Timelog(staff_id=staff6.id, shift_id=shifts[2].id, time_in=datetime(2025, 9, 23, 8, 1), time_out=datetime(2025, 9, 23, 15, 2)),
         
-        # Sarah's timelogs
-        Timelog(staff_id=staff4.id, shift_id=shifts[9].id,
-               time_in=datetime(2025, 9, 22, 7, 55),
-               time_out=datetime(2025, 9, 22, 16, 0)),
+        # 9/23 Evening
+    Timelog(staff_id=staff7.id, shift_id=shifts[3].id, time_in=datetime(2025, 9, 23, 15, 0), time_out=datetime(2025, 9, 23, 22, 1)),
+    Timelog(staff_id=staff8.id, shift_id=shifts[3].id, time_in=datetime(2025, 9, 23, 15, 3), time_out=datetime(2025, 9, 23, 21, 59)),
         
-        # Mike's timelogs
-        Timelog(staff_id=staff5.id, shift_id=shifts[13].id,
-               time_in=datetime(2025, 9, 21, 11, 58),
-               time_out=datetime(2025, 9, 21, 20, 2)),
+         # 9/24 Morning
+    Timelog(staff_id=staff1.id, shift_id=shifts[4].id, time_in=datetime(2025, 9, 24, 7, 59), time_out=datetime(2025, 9, 24, 15, 1)),
+    Timelog(staff_id=staff3.id, shift_id=shifts[4].id, time_in=datetime(2025, 9, 24, 8, 0), time_out=datetime(2025, 9, 24, 15, 2)),
         
-        # Anna's timelogs
-        Timelog(staff_id=staff6.id, shift_id=shifts[17].id,
-               time_in=datetime(2025, 9, 23, 9, 0),
-               time_out=datetime(2025, 9, 23, 17, 0)),
+         # 9/24 Evening
+    Timelog(staff_id=staff2.id, shift_id=shifts[5].id, time_in=datetime(2025, 9, 24, 15, 2), time_out=datetime(2025, 9, 24, 22, 0)),
+    Timelog(staff_id=staff4.id, shift_id=shifts[5].id, time_in=datetime(2025, 9, 24, 15, 0), time_out=datetime(2025, 9, 24, 21, 57)),
         
-        # David's timelogs
-        Timelog(staff_id=staff7.id, shift_id=shifts[20].id,
-               time_in=datetime(2025, 9, 23, 13, 5),
-               time_out=datetime(2025, 9, 23, 17, 0)),
+         # 9/25 Morning
+    Timelog(staff_id=staff5.id, shift_id=shifts[6].id, time_in=datetime(2025, 9, 25, 7, 56), time_out=datetime(2025, 9, 25, 15, 0)),
+    Timelog(staff_id=staff7.id, shift_id=shifts[6].id, time_in=datetime(2025, 9, 25, 8, 0), time_out=datetime(2025, 9, 25, 15, 2)),
         
-        # Lisa's timelogs
-        Timelog(staff_id=staff8.id, shift_id=shifts[24].id,
-               time_in=datetime(2025, 9, 22, 5, 58),
-               time_out=datetime(2025, 9, 22, 14, 2)),
+         # 9/25 Evening
+    Timelog(staff_id=staff6.id, shift_id=shifts[7].id, time_in=datetime(2025, 9, 25, 15, 1), time_out=datetime(2025, 9, 25, 22, 0)),
+    Timelog(staff_id=staff8.id, shift_id=shifts[7].id, time_in=datetime(2025, 9, 25, 15, 3), time_out=datetime(2025, 9, 25, 21, 58)),
     ]
     
     db.session.add_all(timelogs)
