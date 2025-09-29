@@ -8,7 +8,7 @@ class Staff(User):
    __tablename__ = 'staff'
    id = db.Column(db.Integer, ForeignKey('user.id'), primary_key=True)
    position = db.Column(db.String(60))
-   shifts = db.relationship("Shift", backref='staff', lazy=True)
+   shifts = db.relationship("Shift", secondary = 'staff_shift', backref=db.backref('staff_members'), lazy=True)
    time_logs = db.relationship("Timelog", backref='staff', lazy=True)
    
    __mapper_args__ = {
